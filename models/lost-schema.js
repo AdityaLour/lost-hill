@@ -50,6 +50,22 @@ const lostItemSchema = new Schema(
       },
     },
 
+    // Vectors used to rank matches. Not sent to clients (select: false).
+    embedding: {
+      type: {
+        model: String,
+        text: [Number],
+        image: [Number],
+      },
+      select: false,
+    },
+
+    status: {
+      type: String,
+      enum: ["open", "claimed"],
+      default: "open",
+    },
+
     images: [
       {
         type: String,

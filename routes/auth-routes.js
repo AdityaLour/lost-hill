@@ -1,47 +1,17 @@
 const express = require("express");
+const passport = require("../config/passport");
+
 const router = express.Router();
 
-const {
-  startSignUp,
-  completeSignup,
-  startLogin,
-  completeLogin,
-  logout,
-  getProfilePage,
-} = require("../controllers/auth-controller");
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"], prompt: "select_account" }),
+);
 
-router.get("/getstarted", (req, res) => {
-  const activeForm = req.query.form || "signup";
-
-  res.render("auth/get-started", {
-    activeForm,
-    title: activeForm === "signup" ? "Create a new Account" : "Welcome Back!",
-    successMessage: null,
-    errorMessage: null,
-  });
-});
-
-router.get("/signup", (req, res) => {
-  res.render("auth/signup", {
-    activeForm: "signup",
-    title: "Create a new account",
-  });
-});
-
-router.get("/login", (req, res) => {
-  res.render("auth/login", {
-    activeForm: "login",
-    title: "Welcome back!",
-  });
-});
-
-router.post("/start-signUp", startSignUp);
-router.post("/complete-signup", completeSignup);
-
-router.post("/start-login", startLogin);
-router.post("/complete-login", completeLogin);
-
-router.post("/logout", logout);
-router.get("/profile", getProfilePage);
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/?signin=failed" }),
+  (_req, res) => res.redirect("/"),
+);
 
 module.exports = router;

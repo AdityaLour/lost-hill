@@ -1,11 +1,15 @@
 {
-  "name": "lost-and-found",
+  "name": "lost-hill",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently -n api,web -c yellow,cyan \"nodemon app.js\" \"npm --prefix client run dev\"",
+    "dev:api": "nodemon app.js",
+    "build": "npm --prefix client ci && npm --prefix client run build",
+    "test": "node --test",
+    "backfill": "node scripts/backfill-embeddings.js",
+    "eval": "node scripts/eval-matching.js"
   },
   "keywords": [],
   "author": "",
@@ -16,17 +20,21 @@
     "cloudinary": "^2.10.0",
     "connect-mongo": "^5.1.0",
     "dotenv": "^17.4.2",
-    "ejs": "^5.0.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "express-session": "^1.19.0",
-    "firebase": "^12.14.0",
-    "firebase-admin": "^13.10.0",
+    "helmet": "^8.3.0",
     "mongoose": "^9.6.2",
     "multer": "^2.1.1",
-    "nodemon": "^3.1.14",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "path": "^0.12.7",
     "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

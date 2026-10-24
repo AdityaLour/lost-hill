@@ -1,0 +1,20 @@
+[
+  { "label": true,  "meters": 600,   "note": "wallet / wallet",
+    "lost":  { "category": "Wallet", "details": "Brown leather bifold wallet with a Visa card and a metro pass, lost near the bus stop", "date": "2026-10-10" },
+    "found": { "category": "Wallet", "details": "Found a brown leather wallet with cards inside at the bus stop", "date": "2026-10-10" } },
+  { "label": true,  "meters": 1500,  "note": "phone / phone",
+    "lost":  { "category": "Phone", "details": "Black iPhone with a cracked screen and a green case", "date": "2026-10-12" },
+    "found": { "category": "Phone", "details": "Black smartphone, green silicone case, screen cracked in the corner", "date": "2026-10-13" } },
+  { "label": true,  "meters": 3000,  "note": "keys / keys",
+    "lost":  { "category": "Keys", "details": "Bunch of three silver keys on a red lanyard with a small football keychain", "date": "2026-10-08" },
+    "found": { "category": "Keys", "details": "Red lanyard with keys and a football keyring found on a bench", "date": "2026-10-09" } },
+  { "label": false, "meters": 600,   "note": "wallet vs umbrella",
+    "lost":  { "category": "Wallet", "details": "Brown leather bifold wallet with a Visa card and a metro pass", "date": "2026-10-10" },
+    "found": { "category": "Other", "details": "Large green umbrella with a wooden handle", "date": "2026-10-10" } },
+  { "label": false, "meters": 800,   "note": "black phone vs white phone",
+    "lost":  { "category": "Phone", "details": "Black iPhone with a cracked screen and a green case", "date": "2026-10-12" },
+    "found": { "category": "Phone", "details": "White Samsung phone in a clear case, no damage", "date": "2026-10-12" } },
+  { "label": false, "meters": 15000, "note": "keys, far and weeks later",
+    "lost":  { "category": "Keys", "details": "Three silver keys on a red lanyard", "date": "2026-10-08" },
+    "found": { "category": "Keys", "details": "Single brass key with a blue tag", "date": "2026-10-28" } }
+]

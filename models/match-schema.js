@@ -17,6 +17,8 @@ const matchSchema = new mongoose.Schema(
 
     imageScore: Number,
     imageReason: String,
+
+    verifyProvider: String,
   },
 
   {
