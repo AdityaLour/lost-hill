@@ -4,6 +4,8 @@ import { Link, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import Layout from "./components/Layout.jsx";
 import { useAuth } from "./auth.jsx";
 import Landing from "./pages/Landing.jsx";
+import Home from "./pages/Home.jsx";
+import Motion from "./pages/Motion.jsx";
 import Browse from "./pages/Browse.jsx";
 import ItemPage from "./pages/ItemPage.jsx";
 import Post, { PostChooser } from "./pages/Post.jsx";
@@ -25,7 +27,7 @@ function NotFound() {
 }
 
 export default function App() {
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,15 +44,19 @@ export default function App() {
     }
   }, [user, location.pathname, navigate]);
 
-  // New page, scroll to top.
+  // New page: scroll to top, or to the #section named in the link.
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+    if (target) target.scrollIntoView();
+    else window.scrollTo(0, 0);
+  }, [location.pathname, location.hash]);
 
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Landing />} />
+        <Route index element={!ready ? null : user ? <Home /> : <Landing />} />
+        <Route path="about" element={<Landing />} />
+        <Route path="motion" element={<Motion />} />
         <Route path="browse" element={<Browse />} />
         <Route path="item/:type/:id" element={<ItemPage />} />
         <Route path="post" element={<PostChooser />} />

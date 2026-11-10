@@ -4,7 +4,7 @@ const { rank } = require("./scoring");
 const { verifyPair } = require("./ai/verify");
 
 const SEARCH_RADIUS_METERS = 40000;
-const SHOW_AT_LEAST = 30; // ranking score below this is not shown
+const SHOW_AT_LEAST = 55; // ranking score below this is not shown
 const MAX_RESULTS = 6;
 const MAX_VERIFIED = 3; // the only AI calls a lookup can start
 const DROP_IF_TEXT_BELOW = 30; // the verifier says these are clearly different objects

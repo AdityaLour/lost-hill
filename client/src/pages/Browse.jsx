@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api, CATEGORIES } from "../api.js";
-import Ticket from "../components/Ticket.jsx";
+import Shelf from "../motion/Shelf.jsx";
 
 const TYPES = [
   ["", "All"],
@@ -143,13 +143,7 @@ export default function Browse() {
       )}
 
       {items && items.length > 0 && (
-        <ul className="shelf">
-          {items.map((item) => (
-            <li key={`${item.type}-${item.id}`}>
-              <Ticket item={item} />
-            </li>
-          ))}
-        </ul>
+        <Shelf items={items} />
       )}
     </div>
   );

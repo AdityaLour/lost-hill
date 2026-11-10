@@ -18,9 +18,9 @@ export default function Layout() {
 
           <div className="nav-links">
             <NavLink to="/browse">Browse the shelf</NavLink>
-            <a className="hide-sm" href="/#how">
+            <NavLink className="hide-sm" to="/about#how">
               How it works
-            </a>
+            </NavLink>
             <NavLink to="/post">Post</NavLink>
 
             {ready && user && (

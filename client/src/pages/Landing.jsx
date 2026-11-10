@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, tagNumber, timeAgo } from "../api.js";
-import Ticket from "../components/Ticket.jsx";
+import HangingTag from "../motion/HangingTag.jsx";
+import Shelf from "../motion/Shelf.jsx";
+import Stamp from "../motion/Stamp.jsx";
 
 // Shown on the tag until a real found report exists.
 const SAMPLE = { number: "0417", item: "Black wallet", place: "Central station", when: "2 hours ago" };
@@ -70,7 +72,7 @@ export default function Landing() {
           </div>
         </div>
 
-        <div className="hang">
+        <HangingTag>
           <div className="claim-tag-wrap">
             <div className="claim-tag tag-shape">
               <span className="hole" aria-hidden="true" />
@@ -110,23 +112,17 @@ export default function Landing() {
               </form>
               {!latestFound && <p className="sample">Example tag</p>}
             </div>
-            <span className="stamp stamp--big" aria-hidden="true">
+            <Stamp big delay={900} aria-hidden="true">
               Found
-            </span>
+            </Stamp>
           </div>
-        </div>
+        </HangingTag>
       </section>
 
       {recent.length > 0 && (
         <section className="section" aria-labelledby="shelf-title">
           <h2 id="shelf-title">On the shelf now</h2>
-          <ul className="shelf">
-            {recent.map((item) => (
-              <li key={`${item.type}-${item.id}`}>
-                <Ticket item={item} />
-              </li>
-            ))}
-          </ul>
+          <Shelf items={recent} />
           <p style={{ marginTop: 28 }}>
             <Link className="btn" to="/browse">
               See every report

@@ -12,6 +12,7 @@ const today = () => new Date().toISOString().slice(0, 10);
 // Reserve one AI call for today. Returns false once the daily cap is reached, so the
 // caller skips the AI step and falls back to the cheap ranking instead of failing.
 async function consume(kind) {
+  if (process.env.AI_BUDGET_OFF === "1") return true;
   const cap = capFor(kind);
   if (cap <= 0) return false;
   const field = `calls.${kind}`;

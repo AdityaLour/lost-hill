@@ -17,6 +17,7 @@ async function request(path, { method = "GET", json, form } = {}) {
     const error = new Error(data.error || "Something went wrong");
     error.status = response.status;
     error.code = data.code;
+    error.fields = data.fields;
     throw error;
   }
 

@@ -28,11 +28,6 @@ export default function PhoneForm({ onSaved, submitLabel = "Save number" }) {
 
   return (
     <form onSubmit={submit}>
-      {error && (
-        <p className="notice notice--error" role="alert">
-          {error}
-        </p>
-      )}
       <label className="field">
         <span>Phone number</span>
         <input
@@ -42,11 +37,17 @@ export default function PhoneForm({ onSaved, submitLabel = "Save number" }) {
           autoComplete="tel"
           placeholder="+91 98765 43210"
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          aria-invalid={Boolean(error)}
+          onChange={(event) => { setValue(event.target.value); setError(""); }}
         />
         <small className="hint">
           We do not verify it. It is shown only to the other person, and only after the finder approves a claim.
         </small>
+        {error && (
+          <small className="field-error" role="alert">
+            {error}
+          </small>
+        )}
       </label>
       <button className="btn btn--solid" type="submit" disabled={busy}>
         {busy ? "Saving…" : submitLabel}

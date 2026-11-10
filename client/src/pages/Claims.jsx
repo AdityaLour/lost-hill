@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, tagNumber, timeAgo } from "../api.js";
 import { useAuth } from "../auth.jsx";
+import ClaimTie from "../components/ClaimTie.jsx";
 import PhoneForm from "../components/PhoneForm.jsx";
 import SignInPrompt from "../components/SignInPrompt.jsx";
+import Stamp from "../motion/Stamp.jsx";
 
 function Claim({ claim, onChanged }) {
   const [busy, setBusy] = useState(false);
@@ -29,7 +31,7 @@ function Claim({ claim, onChanged }) {
   const stamp = { pending: "Waiting", approved: "Approved", rejected: "Declined" }[claim.status];
 
   return (
-    <article className="claim">
+    <article className="claim" data-thud>
       <div className="claim-head">
         <div>
           <h3 style={{ fontSize: 32 }}>
@@ -41,10 +43,12 @@ function Claim({ claim, onChanged }) {
             {isFinder ? `${claim.other.name} says it is theirs` : `Sent to ${claim.other.name}`} · {timeAgo(claim.createdAt)}
           </p>
         </div>
-        <span className={`stamp ${claim.status === "approved" ? "" : "stamp--ink"}`} style={{ fontSize: 20, borderWidth: 3 }}>
+        <Stamp key={claim.status} ink={claim.status !== "approved"} style={{ fontSize: 20, borderWidth: 3 }}>
           {stamp}
-        </span>
+        </Stamp>
       </div>
+
+      {claim.status === "approved" && <ClaimTie claim={claim} />}
 
       <blockquote>{claim.message}</blockquote>
 

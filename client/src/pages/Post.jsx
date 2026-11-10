@@ -24,6 +24,14 @@ export function PostChooser() {
   );
 }
 
+function FieldError({ message }) {
+  return message ? (
+    <small className="field-error" role="alert">
+      {message}
+    </small>
+  ) : null;
+}
+
 const today = () => new Date().toISOString().slice(0, 10);
 
 export default function Post() {
@@ -36,7 +44,7 @@ export default function Post() {
   const [date, setDate] = useState(today());
   const [place, setPlace] = useState(null);
   const [files, setFiles] = useState([]);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({}); // { category, details, date, place, photo, form }
   const [busy, setBusy] = useState(false);
 
   const previews = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
@@ -63,21 +71,43 @@ export default function Post() {
     const tooBig = chosen.find((file) => file.size > 10 * 1024 * 1024);
 
     if (tooBig) {
-      setError(`${tooBig.name} is over 10 MB. Choose a smaller photo.`);
+      setFiles([]);
+      event.target.value = "";
+      fail({ photo: `${tooBig.name} is over 10 MB. Choose a smaller photo.` });
       return;
     }
 
-    setError("");
+    clear("photo");
     setFiles(chosen);
+  }
+
+  const clear = (name) => setErrors((current) => (current[name] ? { ...current, [name]: undefined } : current));
+
+  // Shows every problem next to its field and jumps to the first one.
+  function fail(next) {
+    setErrors(next);
+
+    const first = ["category", "details", "date", "place", "photo"].find((name) => next[name]);
+    if (first) {
+      const target = document.getElementById(`field-${first}`);
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      target?.querySelector?.("input, textarea")?.focus({ preventScroll: true });
+    }
   }
 
   async function submit(event) {
     event.preventDefault();
-    setError("");
 
-    if (!category) return setError("Pick a category.");
-    if (!place) return setError("Choose where it was: use your location or search for a place.");
-    if (found && files.length === 0) return setError("Add at least one photo so the owner can recognise it.");
+    const problems = {};
+    if (!category) problems.category = "Pick what it is.";
+    if (details.trim().length < 10) problems.details = "Write at least 10 characters: colour, brand, marks, what was inside.";
+    if (!date || date > today()) problems.date = "Choose a date that is not in the future.";
+    if (!place) problems.place = "Choose where it was: type a place and pick a suggestion, or use your location.";
+    if (found && files.length === 0) problems.photo = "Add at least one photo so the owner can recognise it.";
+
+    if (Object.keys(problems).length) return fail(problems);
+
+    setErrors({});
 
     const form = new FormData();
     form.set("category", category);
@@ -95,7 +125,21 @@ export default function Post() {
       const data = await api.createItem(type, form);
       navigate(`/item/${type}/${data.item.id}`);
     } catch (err) {
-      setError(err.message);
+      const map = { category: "category", details: "details", date: "date", location: "place", address: "place", photo: "photo" };
+      const messages = {
+        category: "Pick what it is.",
+        details: "Write at least 10 characters.",
+        date: "Check the date.",
+        place: "Choose where it was.",
+        photo: "Add at least one photo.",
+      };
+      const next = {};
+      (err.fields || []).forEach((name) => {
+        if (map[name]) next[map[name]] = messages[map[name]];
+      });
+
+      if (Object.keys(next).length) fail(next);
+      else setErrors({ form: err.message });
       setBusy(false);
     }
   }
@@ -110,49 +154,48 @@ export default function Post() {
       </p>
 
       <form className="form" onSubmit={submit} noValidate>
-        {error && (
-          <p className="notice notice--error" role="alert">
-            {error}
-          </p>
-        )}
-
-        <fieldset className="chips">
+        <fieldset className="chips" id="field-category" aria-invalid={Boolean(errors.category)}>
           <legend className="legend">What is it?</legend>
           {CATEGORIES.map((name) => (
             <label className="chip" key={name}>
-              <input type="radio" name="category" value={name} checked={category === name} onChange={() => setCategory(name)} />
+              <input type="radio" name="category" value={name} checked={category === name} onChange={() => { setCategory(name); clear("category"); }} />
               <span>{name}</span>
             </label>
           ))}
+          <FieldError message={errors.category} />
         </fieldset>
 
-        <label className="field">
+        <label className="field" id="field-details">
           <span>Describe it</span>
           <textarea
             className="textarea"
-            required
-            minLength={10}
             maxLength={1000}
+            aria-invalid={Boolean(errors.details)}
             value={details}
-            onChange={(event) => setDetails(event.target.value)}
+            onChange={(event) => { setDetails(event.target.value); clear("details"); }}
             placeholder="Black leather wallet, a small tear near the zip, three cards and a bus pass."
           />
           <small className="hint">At least 10 characters. Do not include your phone number here.</small>
+          <FieldError message={errors.details} />
         </label>
 
-        <label className="field">
+        <label className="field" id="field-date">
           <span>{found ? "Date found" : "Date lost"}</span>
-          <input className="input" type="date" required max={today()} value={date} onChange={(event) => setDate(event.target.value)} style={{ maxWidth: 240 }} />
+          <input className="input" type="date" max={today()} aria-invalid={Boolean(errors.date)} value={date} onChange={(event) => { setDate(event.target.value); clear("date"); }} style={{ maxWidth: 240 }} />
+          <FieldError message={errors.date} />
         </label>
 
-        <LocationField value={place} onChange={setPlace} />
+        <div id="field-place">
+          <LocationField value={place} onChange={(next) => { setPlace(next); clear("place"); }} error={errors.place} />
+        </div>
 
-        <label className="field">
+        <label className="field" id="field-photo">
           <span>
             Photos {found ? "(required)" : "(optional, but they help matching)"}
           </span>
           <input className="input" type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={pickFiles} style={{ paddingTop: 12 }} />
           <small className="hint">Up to 3 photos, 10 MB each. JPG, PNG or WebP.</small>
+          <FieldError message={errors.photo} />
           {previews.length > 0 && (
             <div className="previews">
               {previews.map((src, index) => (
@@ -161,6 +204,12 @@ export default function Post() {
             </div>
           )}
         </label>
+
+        {errors.form && (
+          <p className="notice notice--error" role="alert">
+            {errors.form}
+          </p>
+        )}
 
         <button className="btn btn--solid" type="submit" disabled={busy}>
           {busy ? "Posting…" : "Post report"}

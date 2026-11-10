@@ -26,7 +26,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://lh3.googleusercontent.com"],
-        connectSrc: ["'self'", "https://nominatim.openstreetmap.org"],
+        connectSrc: ["'self'", "https://nominatim.openstreetmap.org", "https://photon.komoot.io"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
       },

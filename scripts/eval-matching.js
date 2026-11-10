@@ -8,6 +8,7 @@
 // Each report: { "category", "details", "date", "image" (optional Cloudinary URL) }.
 // With an embedding provider configured this uses real vectors, otherwise word overlap.
 require("dotenv").config();
+process.env.AI_BUDGET_OFF = "1";
 
 const fs = require("node:fs");
 const path = require("node:path");
@@ -15,7 +16,7 @@ const path = require("node:path");
 const { scorePair } = require("../services/scoring");
 const { embedItem, provider } = require("../services/ai/embeddings");
 
-const THRESHOLD = 30; // matches SHOW_AT_LEAST in find-matches.js
+const THRESHOLD = 55; // matches SHOW_AT_LEAST in find-matches.js
 
 const toReport = (entry) => ({
   description: { category: entry.category, details: entry.details, lostDate: entry.date },

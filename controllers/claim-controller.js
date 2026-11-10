@@ -28,6 +28,10 @@ function presentClaim(claim, viewerId) {
       image: item.images[0] || null,
     },
     other: { name: firstName(other.name), avatar: other.avatar },
+    // The claimant's own lost report this claim is for, when they chose one.
+    lost: claim.lostItem
+      ? { id: String(claim.lostItem._id), category: claim.lostItem.description.category }
+      : null,
   };
 
   if (claim.status === "approved") {
@@ -41,7 +45,8 @@ function populateClaim(query) {
   return query
     .populate("claimant", "name avatar phoneNumber")
     .populate("finder", "name avatar phoneNumber")
-    .populate("foundItem", "description location images");
+    .populate("foundItem", "description location images")
+    .populate("lostItem", "description");
 }
 
 async function createClaim(req, res) {

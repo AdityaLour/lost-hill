@@ -19,6 +19,13 @@ Lost Hill is a full-stack lost-and-found application that goes beyond keyword se
 - **AI/Matching:** Jina CLIP v2 or Cloudflare bge-m3 (embeddings), Mistral and/or Gemini (verification)
 - **Photos:** Cloudinary
 
+## Screens
+
+- **Home (signed in):** a pinboard. Notes for what needs you (a claim to answer, an approved claim, a new potential find), then everyone's open reports pinned as tags. Your newest open lost report is pinned first and, when something matches it, tied to the best match with a string and its score.
+- **Your lost report:** opening it lists every potential find near it, best first, each with a tie animation and a button to open the found report. The claim form there asks which of your lost reports it is for.
+- **Claims:** when a finder approves, the lost and found tags are tied together under APPROVED the first time you see it, and the phone numbers appear.
+- **Motion:** `/motion` previews every animation. It is not linked from the menu. All motion stops if the system is set to "reduce motion".
+
 ## How It Works
 
 1. Sign in with Google. No passwords, no SMS.
@@ -51,7 +58,7 @@ The score ranges in `services/scoring.js` are starting values, not measured on r
 ## Rate limits
 
 Per IP: 300 API requests / 15 min, 30 sign-in attempts / 15 min.
-Per user: 10 posts / day, 15 claims / day, 12 match lookups / hour. A lookup starts at most 3 AI checks; results are cached per pair.
+Per user: 10 posts / day, 15 claims / day, 40 match lookups / hour. A lookup starts at most 3 AI checks; results are cached per pair.
 
 ## Getting Started
 

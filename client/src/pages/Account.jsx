@@ -3,7 +3,7 @@ import { api } from "../api.js";
 import { useAuth } from "../auth.jsx";
 import PhoneForm from "../components/PhoneForm.jsx";
 import SignInPrompt from "../components/SignInPrompt.jsx";
-import Ticket from "../components/Ticket.jsx";
+import Shelf from "../motion/Shelf.jsx";
 
 export default function Account() {
   const { user, ready } = useAuth();
@@ -46,13 +46,7 @@ export default function Account() {
         {!items && <p role="status">Loading…</p>}
         {items && items.length === 0 && <p>You have not posted anything yet.</p>}
         {items && items.length > 0 && (
-          <ul className="shelf">
-            {items.map((item) => (
-              <li key={`${item.type}-${item.id}`}>
-                <Ticket item={item} />
-              </li>
-            ))}
-          </ul>
+          <Shelf items={items} />
         )}
       </section>
     </div>

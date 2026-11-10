@@ -49,10 +49,11 @@ module.exports = {
     message: "You have sent a lot of claims today. Try again tomorrow.",
   }),
 
-  // Match lookups call Gemini, per user.
+  // Match lookups, per user. Ranking is local and verified pairs are cached, so most lookups
+  // cost nothing; the daily AI budget (services/ai/budget.js) caps the real spending.
   match: make({
     windowMs: HOUR,
-    limit: 12,
-    message: "Match lookups are limited to 12 an hour. Try again later.",
+    limit: 40,
+    message: "Match lookups are limited to 40 an hour. Try again later.",
   }),
 };
